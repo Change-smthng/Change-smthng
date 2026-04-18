@@ -4,7 +4,7 @@
 - 🔭 Currently working on: Full Stack + Projects
 - 🌱 Learning: Next.js, Backend, DevOps basics
 - 💬 Ask me about: C++, DSA, Problem Solving
-- ⚡ Fun fact: Solved 400+ DSA problems
+- ⚡ Fun fact: Solved 700+ DSA problems
 
 ---
 
@@ -16,9 +16,9 @@
 ---
 
 ### 📊 GitHub Stats
-![Ketan's GitHub stats](https://github-readme-stats.vercel.app/api?username=ketangoswami&show_icons=true)
+![Ketan's GitHub stats](https://github-readme-stats.vercel.app/api?username=Change-smthng&show_icons=true)
 
 ---
 
 ### 🔥 Streak
-![GitHub Streak](https://streak-stats.demolab.com?user=ketangoswami)
+![GitHub Streak](https://streak-stats.demolab.com?user=Change-smthng)
