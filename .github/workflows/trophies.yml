@@ -1,0 +1,52 @@
+name: Generate Trophies SVG
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # Runs daily
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  generate:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download and inline trophy SVG
+        run: |
+          curl -s "https://github-profile-trophy.vercel.app/?username=Change-smthng&theme=tokyonight&no-frame=true&no-bg=true&margin-w=4&margin-h=4" -o trophies.svg
+          python3 << 'EOF'
+          import re, base64, urllib.request
+
+          with open('trophies.svg', 'r', encoding='utf-8') as f:
+              content = f.read()
+
+          # Find all external http(s) image hrefs inside the SVG
+          urls = re.findall(r'(?:href|xlink:href)="(https?://[^"]+)"', content)
+
+          for url in set(urls):
+              try:
+                  req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+                  with urllib.request.urlopen(req, timeout=10) as r:
+                      data = r.read()
+                      mime = r.headers.get('Content-Type', 'image/png').split(';')[0]
+                      b64 = base64.b64encode(data).decode()
+                      data_uri = f'data:{mime};base64,{b64}'
+                      content = content.replace(f'"{url}"', f'"{data_uri}"')
+              except Exception as e:
+                  print(f"Warning: could not inline {url}: {e}")
+
+          with open('trophies.svg', 'w', encoding='utf-8') as f:
+              f.write(content)
+          EOF
+
+      - name: Commit trophies SVG
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add trophies.svg
+          git diff --staged --quiet || git commit -m "chore: update trophies SVG"
+          git push
